@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Бүрэгхангай сум</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #f3f5f1;
+  --surface: #ffffff;
+  --fg: #1d2620;
+  --muted: #5a675e;
+  --line: #d6ddd5;
+  --pine: #2f5a45;
+  --pine-soft: #e1ebe4;
+  --ochre: #9a7020;
+  --ochre-soft: #f3ead6;
+  --sky: #6f95ad;
+  --hay: #d7c27a;
+  --rest: #b8c2bb;
+  --hero-fg: #f4f7f3;
+  --font-display: "Unbounded", "Golos Text", system-ui, sans-serif;
+  --font-body: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121814; --surface: #19211c; --fg: #e3e9e4; --muted: #9aa89e; --line: #2c3830;
+    --pine: #7fb898; --pine-soft: #1f2e25; --ochre: #d9ac52; --ochre-soft: #2c2616; --sky: #8fb4cc; --hay: #c9b46a; --rest: #4d5a52;
+    --hero-fg: #eef3ef; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121814; --surface: #19211c; --fg: #e3e9e4; --muted: #9aa89e; --line: #2c3830;
+  --pine: #7fb898; --pine-soft: #1f2e25; --ochre: #d9ac52; --ochre-soft: #2c2616; --sky: #8fb4cc; --hay: #c9b46a; --rest: #4d5a52;
+  --hero-fg: #eef3ef; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.65; }
+img { max-width: 100%; }
+.wrap { max-width: 1000px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* Hero */
+.hero {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 3.5rem);
+  color: var(--hero-fg);
+  background: linear-gradient(180deg, #2c4a5c 0%, #3d6a6a 48%, #2f5a45 48.2%, #2a4f3c 70%, #8a7a3e 70.3%, #a48c44 100%);
+}
+.eyebrow { font-family: var(--font-data); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
+.hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.2rem, 7vw, 4.4rem); line-height: 1.05; margin: .4rem 0 .8rem; text-wrap: balance; letter-spacing: -.01em; }
+.hero p.lead { max-width: 40rem; font-size: 1.08rem; margin: 0 0 2rem; opacity: .95; }
+.coords { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; font-family: var(--font-data); font-size: 13px; padding-bottom: 2.4rem; }
+
+/* Fact strip */
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; transform: translateY(-1.6rem); overflow: hidden; }
+.fact { padding: 1rem 1.1rem; border-right: 1px solid var(--line); min-width: 0; }
+.fact:last-child { border-right: 0; }
+.fact .k { font-size: 12px; color: var(--muted); letter-spacing: .04em; }
+.fact .v { font-family: var(--font-data); font-size: 1.25rem; font-weight: 500; font-variant-numeric: tabular-nums; margin-top: .15rem; }
+.fact .v small { font-size: .75rem; color: var(--muted); font-weight: 400; }
+@media (max-width: 720px) {
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fact:nth-child(2) { border-right: 0; }
+  .fact:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+}
+
+/* In-page nav */
+nav.toc { display: flex; flex-wrap: wrap; gap: .4rem; margin: -.4rem 0 2.6rem; padding: 0; list-style: none; }
+nav.toc a { display: inline-block; font-size: 14px; padding: .3rem .75rem; border: 1px solid var(--line); border-radius: 999px; color: var(--fg); text-decoration: none; background: var(--surface); }
+nav.toc a:hover { border-color: var(--pine); color: var(--pine); }
+a:focus-visible { outline: 2px solid var(--ochre); outline-offset: 2px; }
+
+/* Sections */
+main { display: grid; gap: 3.4rem; padding-bottom: 3rem; }
+section { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 1.5rem 2.5rem; scroll-margin-top: 1rem; }
+section > header h2 { font-family: var(--font-display); font-weight: 500; font-size: 1.25rem; line-height: 1.25; margin: 0; text-wrap: balance; }
+section > header .tag { font-family: var(--font-data); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ochre); display: block; margin-bottom: .35rem; }
+.body { min-width: 0; max-width: 42rem; }
+.body > p { margin: 0 0 1rem; }
+.body > p:last-child { margin-bottom: 0; }
+@media (max-width: 720px) { section { grid-template-columns: minmax(0, 1fr); gap: .8rem; } }
+
+/* Key-value list */
+.kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .45rem 1.2rem; margin: 0 0 1rem; }
+.kv dt { color: var(--muted); font-size: 14px; }
+.kv dd { margin: 0; font-variant-numeric: tabular-nums; }
+@media (max-width: 460px) { .kv { grid-template-columns: minmax(0, 1fr); gap: .1rem; } .kv dd { margin-bottom: .5rem; } }
+
+/* Timeline */
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1rem; border-left: 2px solid var(--line); }
+.timeline li { padding-left: 1.2rem; position: relative; }
+.timeline li::before { content: ""; position: absolute; left: -7px; top: .45rem; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 2px solid var(--pine); }
+.timeline li.key::before { background: var(--pine); }
+.timeline .when { font-family: var(--font-data); font-size: 13px; color: var(--pine); font-weight: 500; }
+
+/* Achievement cards */
+.wins { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem; margin: 0 0 1rem; padding: 0; list-style: none; }
+.wins li { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.1rem; min-width: 0; }
+.wins .big { font-family: var(--font-data); font-size: 1.5rem; font-weight: 500; color: var(--pine); font-variant-numeric: tabular-nums; line-height: 1.2; }
+.wins .big small { font-size: .8rem; color: var(--muted); font-weight: 400; }
+.wins .lbl { font-size: 14px; margin-top: .25rem; }
+@media (max-width: 520px) { .wins { grid-template-columns: minmax(0, 1fr); } }
+
+/* Bars */
+.bar { display: flex; height: 26px; border-radius: 6px; overflow: hidden; margin: .4rem 0 1rem; border: 1px solid var(--line); }
+.bar span { display: block; height: 100%; }
+.legend { display: grid; gap: .45rem; margin: 0; padding: 0; list-style: none; }
+.legend li { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto auto; gap: .7rem; align-items: center; font-size: 15px; }
+.sw { width: 14px; height: 14px; border-radius: 3px; }
+.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: 13px; text-align: right; }
+.pct { font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: 13px; color: var(--muted); width: 3.6rem; text-align: right; }
+.note { font-size: 13px; color: var(--muted); margin-top: .8rem; }
+
+.hbars { display: grid; gap: .55rem; margin: .3rem 0 0; padding: 0; list-style: none; }
+.hbars li { display: grid; grid-template-columns: 9rem minmax(0, 1fr) 5.5rem; gap: .7rem; align-items: center; font-size: 14px; }
+.hbars .track { height: 12px; background: var(--pine-soft); border-radius: 3px; overflow: hidden; }
+.hbars .fill { height: 100%; background: var(--pine); border-radius: 3px; }
+.hbars .fill.o { background: var(--ochre); }
+@media (max-width: 460px) { .hbars li { grid-template-columns: 6.5rem minmax(0, 1fr) 4.6rem; } }
+
+/* Chips */
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; margin: .3rem 0 1.2rem; padding: 0; list-style: none; }
+.chips li { background: var(--pine-soft); padding: .25rem .7rem; border-radius: 999px; font-size: 14px; }
+.chips.out li { background: transparent; border: 1px solid var(--line); }
+.sub { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 1.4rem 0 .4rem; font-weight: 600; }
+.body > .sub:first-child { margin-top: 0; }
+
+/* Tables */
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; font-size: 15px; }
+th, td { text-align: left; padding: .5rem .4rem; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .04em; }
+td.n, th.n { text-align: right; }
+td.n { font-family: var(--font-data); font-size: 14px; }
+.popbar { height: 8px; background: var(--pine); border-radius: 4px; }
+
+/* People & sites */
+.list { display: grid; gap: 1rem; margin: 0; padding: 0; list-style: none; }
+.list li { border-top: 1px solid var(--line); padding-top: .9rem; }
+.list h3 { font-size: 1rem; margin: 0 0 .2rem; font-weight: 600; }
+.list p { margin: 0; color: var(--muted); font-size: 15px; }
+.list .meta { font-family: var(--font-data); font-size: 12px; color: var(--ochre); letter-spacing: .04em; }
+
+.callout { background: var(--ochre-soft); border-radius: 8px; padding: .9rem 1.1rem; font-size: 14px; margin-top: 1rem; }
+
+/* Sources */
+footer { border-top: 1px solid var(--line); padding-block: 2rem 3rem; font-size: 14px; color: var(--muted); }
+footer h2 { font-family: var(--font-display); font-weight: 500; font-size: 1rem; color: var(--fg); margin: 0 0 .7rem; }
+footer ol { margin: 0; padding-left: 1.2rem; display: grid; gap: .3rem; }
+footer a { color: var(--pine); text-underline-offset: 2px; word-break: break-word; }
+.contact { margin-top: 1.4rem; font-family: var(--font-data); font-size: 13px; user-select: all; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Булган аймаг · Монгол Улс</div>
+    <h1>Бүрэгхангай сум</h1>
+    <p class="lead">Булган аймгийн хамгийн эртний сум. Дархан хайрханы өвөрт төвтэй, Шивэрт, Бичигтийн голын хөндийгөөр нутагласан, Хүннүгийн хот балгас, хадны бичээсээр баялаг хангайн нутаг.</p>
+    <div class="coords">
+      <span>48°15′ хойд өргөрөг</span>
+      <span>103°52′ зүүн уртраг</span>
+      <span>Улаанбаатараас 265 км</span>
+      <span>Аймгийн төвөөс 86 км</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="facts" aria-label="Гол үзүүлэлтүүд">
+    <div class="fact"><div class="k">Нутаг дэвсгэр</div><div class="v">3,498 <small>км²</small></div></div>
+    <div class="fact"><div class="k">Байгуулагдсан</div><div class="v">1923</div></div>
+    <div class="fact"><div class="k">Баг</div><div class="v">4</div></div>
+    <div class="fact"><div class="k">Хүн ам (2009)</div><div class="v">2,406</div></div>
+  </div>
+
+  <nav class="toc" aria-label="Агуулга">
+    <a href="#ерөнхий">Ерөнхий</a>
+    <a href="#түүх">Түүх</a>
+    <a href="#амжилт">2016 он хүртэлх амжилт</a>
+    <a href="#сүүлийн">2017–2026</a>
+    <a href="#нийгэм">Нийгэм, эрүүл мэнд</a>
+    <a href="#уурхай">Уул уурхай, нөхөн сэргээлт</a>
+    <a href="#газар">Газар нутаг</a>
+    <a href="#тариалан">Газар тариалан</a>
+    <a href="#мал">Мал аж ахуй</a>
+    <a href="#байгаль">Байгаль</a>
+    <a href="#хүн-ам">Хүн ам</a>
+    <a href="#алдартнууд">Алдартнууд</a>
+    <a href="#дурсгал">Дурсгалт газар</a>
+    <a href="#соёл">Соёл, спорт</a>
+  </nav>
+
+  <main>
+    <section id="ерөнхий">
+      <header><span class="tag">Ерөнхий</span><h2>Байршил, дэд бүтэц</h2></header>
+      <div class="body">
+        <p>Бүрэгхангай нь 100 орчим жилийн түүхтэй, Булган аймгийн хамгийн эртний сумд тооцогддог. Сумын төв нь Дархан хайрханы өвөрт байрлах бөгөөд тус сумын уугуул Дандар баатрын хөшөө тэнд сүндэрлэн байдаг.</p>
+        <dl class="kv">
+          <dt>Засаг захиргаа</dt><dd>Дархан, Бумбат, Цахт, Дэрст баг. Сумын төв нь 1–5-р хороонд хуваагддаг</dd>
+          <dt>Засаг дарга</dt><dd>Эрдэнэбатын Эрдэнэбулган (2024 оны 12-р сараас)</dd>
+          <dt>Хил залгаа</dt><dd>Орхон аймаг, Төв аймгийн Заамар сум, Булган аймгийн Хишиг-Өндөр сум</dd>
+          <dt>Нийслэл хүртэл</dt><dd>265 км, үүнээс 205 км нь хатуу хучилттай зам</dd>
+          <dt>Аймгийн төв хүртэл</dt><dd>86 км</dd>
+          <dt>Эрчим хүч</dt><dd>Төвийн эрчим хүчний системд холбогдсон</dd>
+          <dt>Холбоо</dt><dd>Гар утасны сүлжээнд холбогдсон</dd>
+          <dt>Байгууллага</dt><dd>Эрүүл мэндийн төв, ерөнхий боловсролын сургууль, «Нархан» цэцэрлэг, соёлын төв, цагдаагийн тасаг, багийн танхимууд</dd>
+        </dl>
+      </div>
+    </section>
+
+    <section id="түүх">
+      <header><span class="tag">Түүх</span><h2>Хүннүгээс өнөөг хүртэл</h2></header>
+      <div class="body">
+        <ol class="timeline">
+          <li><div class="when">МЭӨ III – МЭ I зуун</div><div>Хүннүгийн үед Шувуутын голын хэрэм хэмээх хот суурин энд оршиж байжээ. Их Дулаан гэдэг газраас Хүннүгийн түшмэдүүд бичгийн хэрэгсэл хэрэглэж байсныг нотлох олдвор гарсан.</div></li>
+          <li><div class="when">XIII зуун (таамаглал)</div><div>Бичигтийн хадан хошууны бичээс нь XIII зууны монгол бичигтэй төстэй гэж үздэг.</div></li>
+          <li><div class="when">1921 он</div><div>Ардын хувьсгалын дараа орон нутгийн засаг захиргааг өөрчлөн зохион байгуулж эхэлсэн.</div></li>
+          <li class="key"><div class="when">1923 он</div><div>Түшээт хан аймгийн Жонон гүний хошууг Богд хан уулын аймгийн Шажин-Бүрэг (Сазан Бүрэг) уулын хошуу болгон өөрчилсөн. Хошуу нь Их Дулаан, Баянхангай, Заамар гэсэн гурван сумтай байв. Анхны хошууны даргаар Жамъяндорж сонгогдсон.</div></li>
+          <li><div class="when">Социализмын үе</div><div>Ахмад малчин Сэрээнэнхорол эрсдэл даах чадварыг нэмэгдүүлэхийн тулд цэвэр монгол хонийг баяд үүлдрийн хоньтой эрлийзжүүлэн үржүүлж байжээ.</div></li>
+          <li><div class="when">2005–2009 он</div><div>Хүн ам 2,123-аас 2,406 болж өссөн.</div></li>
+          <li><div class="when">2015 он</div><div>Нийт 113 мянга гаруй төл хүлээн авч, 1,480 га-д үр тариа тариалсан (дэлгэрэнгүйг доор).</div></li>
+          <li class="key"><div class="when">2023 он</div><div>Сум байгуулагдсаны 100 жилийн ой. Ойг угтан нутгийн иргэдийн хандиваар «Сазан Бүрэгийн сайхан нутаг» сүлд дууг бүтээсэн.</div></li>
+          <li><div class="when">2024 он</div><div>Д.Цэрэннадмид Ардын хатанбаатар С.Магсаржавын нэрэмжит шагнал хүртсэн. 12-р сард Э.Эрдэнэбулган сумын Засаг даргаар томилогдсон.</div></li>
+          <li><div class="when">2026 оны 2-р сар</div><div>Улсын заан Д.Баасандорж Хөдөлмөрийн гавьяаны улаан тугийн одонгоор шагнагдсан.</div></li>
+          <li><div class="when">2026 оны 5–6-р сар</div><div>Сургуулийн спорт заалны 1.6 тэрбум ₮-ийн гэрээ байгуулсан. Эрүүл мэндийн төвийн засварыг улсын комисс хүлээн авсан. «Малчид, төлчдийн баяр – 2026»-д аварга малчдыг шагнасан.</div></li>
+          <li class="key"><div class="when">2026 оны 7-р сар</div><div>Сум байгуулагдсаны 103 жилийн ойн наадам болсон.</div></li>
+          <li><div class="when">2026 оны 8–9-р сар</div><div>Скайтел сүлжээ нэвтэрсэн. 250 өрхөд ухаалаг цахилгаан тоолуур үнэгүй суурилуулж, Бумбат багт болон 5-р хороонд шинэ худаг гаргасан.</div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="амжилт">
+      <header><span class="tag">Амжилт</span><h2>2016 он хүртэлх гол үзүүлэлт, амжилт</h2></header>
+      <div class="body">
+        <p>Доорх тоонууд нь Булган аймгийн Статистикийн хэлтсийн 2015 оны 9-р сарын танилцуулга болон 2009 оны жилийн тайлангаас авсан албан ёсны мэдээлэл юм.</p>
+        <ul class="wins">
+          <li><div class="big">88.0<small>%</small></div><div class="lbl">2015 оны төллөлтийн хувь. Нийт 113,054 төл хүлээн авсан.</div></li>
+          <li><div class="big">107,084</div><div class="lbl">2015 оны эхний 9 сард бойжуулсан төл. Төлийн хорогдлыг 5.3%-д барьсан.</div></li>
+          <li><div class="big">91.5<small>%</small></div><div class="lbl">Эм хонины төллөлт. 67,050 хурга хүлээн авсан.</div></li>
+          <li><div class="big">1.3<small>%</small></div><div class="lbl">Зүй бусаар хорогдсон том мал оны эхний малд эзлэх хувь (2015, I–IX сар).</div></li>
+          <li><div class="big">1,480 <small>га</small></div><div class="lbl">2015 онд тариалсан үр тариа, үүнээс 1,390 га буудай.</div></li>
+          <li><div class="big">65.4 <small>тн</small></div><div class="lbl">2015 онд хураасан хүнсний ногоо (байцаа, лууван, манжин, сонгино).</div></li>
+          <li><div class="big">205 <small>км</small></div><div class="lbl">Улаанбаатар хүртэлх замын хатуу хучилттай хэсэг.</div></li>
+          <li><div class="big">+13<small>%</small></div><div class="lbl">2005–2009 оны хүн амын өсөлт (2,123 → 2,406).</div></li>
+        </ul>
+        <div class="callout">Сумын тэргүүний малчид, шагнал, бүтээн байгуулалтын он дарааллыг интернетэд дэлгэрэнгүй нийтэлсэн эх сурвалж олдсонгүй. Сумын ЗДТГ эсвэл архивын материал танд байвал нэмж оруулж болно.</div>
+      </div>
+    </section>
+
+    <section id="сүүлийн">
+      <header><span class="tag">2017–2026</span><h2>Сүүлийн үеийн бүтээн байгуулалт, амжилт</h2></header>
+      <div class="body">
+        <p>2026 онд суманд хэд хэдэн томоохон барилга, дэд бүтцийн ажил хийгдэж байна.</p>
+        <ul class="wins">
+          <li><div class="big">1.6 <small>тэрбум ₮</small></div><div class="lbl">Ерөнхий боловсролын сургуулийн спорт заал. Гэрээг 2026 оны 5-р сард байгуулсан, 2026–2027 онд баригдана.</div></li>
+          <li><div class="big">80<small>%</small></div><div class="lbl">Шинэ соёлын төвийн барилгын гүйцэтгэл (2026 оны 6-р сар).</div></li>
+          <li><div class="big">20 <small>айл</small></div><div class="lbl">«Жинст Өргөө» 5 давхар орон сууц, «Шинэ хотхон» бүсэд. 2026 оны 6-р сард 90% гүйцэтгэлтэй байсан.</div></li>
+          <li><div class="big">250</div><div class="lbl">Ухаалаг цахилгаан тоолуур үнэгүй суурилуулсан өрх (2026 оны 9-р сар).</div></li>
+        </ul>
+        <p class="sub">Бусад ажил (2026)</p>
+        <ul class="list">
+          <li><h3>Эрүүл мэнд</h3><p>Эрүүл мэндийн төвийн барилгын засварыг улсын комисс хүлээн авсан. Хойд эмнэлэг, гаражийн барилга баригдаж байна.</p></li>
+          <li><h3>Ус хангамж</h3><p>Бумбат багийн Цагаан үзүүр газарт болон 5-р хороонд шинэ худаг гаргасан.</p></li>
+          <li><h3>Зам, гүүр</h3><p>1-р хорооны гүүр болон сумын төвийн замд засвар хийсэн.</p></li>
+          <li><h3>Холбоо, эрчим хүч</h3><p>Скайтел үүрэн холбооны сүлжээ нэвтэрсэн. Шатахуун түгээх «Хурд», «Петровис» станцуудтай гурван сарын тасралтгүй хангамжийн гэрээ хийсэн.</p></li>
+          <li><h3>Боловсрол</h3><p>Сургуулийн волейболын баг Засаг даргын Тамгын газрын 10 сая ₮-ийн дэмжлэгээр БНСУ-ын Пусан хотод тэмцээнд оролцсон. Шинэ хичээлийн жилд сургууль, цэцэрлэгт тоног төхөөрөмж хүлээлгэн өгсөн.</p></li>
+        </ul>
+        <p class="sub">«Малчид, төлчдийн баяр – 2026»-д шагнагдсан малчид</p>
+        <div class="tbl">
+          <table>
+            <thead><tr><th>Шагнал</th><th>Малчин</th><th>Баг</th></tr></thead>
+            <tbody>
+              <tr><td>Сумын аварга малчин</td><td>Г.Батсайхан, Б.Оюунгэрэл</td><td>Цахт</td></tr>
+              <tr><td>Манлай малчин</td><td>Д.Чинзориг</td><td>Цахт</td></tr>
+              <tr><td>Хөдөө аж ахуйн тэргүүн</td><td>Т.Тэгшжаргал</td><td>Цахт</td></tr>
+              <tr><td>Хөдөө аж ахуйн тэргүүн</td><td>Ганбат</td><td>Дэрст</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Мөн Г.Гансүх (Цахт), Б.Даваадорж (Дархан), Я.Барс, С.Саранбаатар (Дэрст), Д.Баярбаатар, Э.Эрхэмцогт (Бумбат) нар шагнагдсан.</p>
+        <div class="callout">2017–2022 оны үйл явдал, мөн хүн ам, малын хамгийн сүүлийн тоо интернетэд нийтлэгдээгүй байна. Сумын 2025–2026 оны нийгэм, эдийн засгийн үзүүлэлт ЗДТГ-ын сайтад Excel, PDF хавсралтаар байгаа тул тэр файлыг илгээвэл хуудсанд нэмж болно.</div>
+      </div>
+    </section>
+
+    <section id="нийгэм">
+      <header><span class="tag">Нийгэм</span><h2>Эрүүл мэнд, нийгмийн халамж (2026)</h2></header>
+      <div class="body">
+        <ul class="wins">
+          <li><div class="big">438</div><div class="lbl">Үнэгүй шүдний үзлэг, эмчилгээ хийлгэсэн 0–18 насны хүүхэд (69 цэцэрлэгийн, 369 сургуулийн). 8 шүдний эмч оролцсон.</div></li>
+          <li><div class="big">446</div><div class="lbl">Нарийн мэргэжлийн эмчийн үнэгүй үзлэгт хамрагдсан иргэн, үүнээс 404 нь ахмад настан.</div></li>
+          <li><div class="big">66 <small>сая ₮</small></div><div class="lbl">Хөдөлмөр эрхлэлтийг дэмжих зээл, тусламж авсан 7 иргэн: 4 бизнес эрхлэгч, 2 ахмад настан, 1 хөгжлийн бэрхшээлтэй иргэн.</div></li>
+          <li><div class="big">5 <small>өрх</small></div><div class="lbl">Бүрэн иж бүрэн гэр хүлээн авсан зорилтот өрх (Бумбат, Цахт, Дэрст, Дархан баг).</div></li>
+        </ul>
+        <ul class="list">
+          <li><h3>Эрүүл мэндийн төвийн 100 жил</h3><p>Ойг тохиолдуулан «Платинум Ланд» ХХК ажилчдын амралтын өрөөг бүрэн тохижуулж хүлээлгэн өгсөн. Орон нутгийн хөгжлийн сангаас 10 сая ₮-өөр ажлын байрны тавилга, 9.5 сая ₮-өөр гал тогооны агааржуулалтыг шинэчилсэн.</p></li>
+          <li><h3>Ахмадын тусламж</h3><p>Орхон аймгийн «Баян-Өндөр Мед» эмнэлэгтэй хамтран зүрх судас, мэдрэл, мэс засал, эх барих эмэгтэйчүүд, эхо оношилгооны үзлэг хийсэн.</p></li>
+          <li><h3>Хүүхэд хамгаалал</h3><p>Хүүхдийн орчны эрсдэлийн онлайн үнэлгээ хийж, 7–12-р ангийн сурагчдад жендэрийн сургалт явуулсан. Дэрст багийн нэгэн иргэн олон хүүхэдтэй өрхөд 21 толгой мал бэлэглэсэн.</p></li>
+          <li><h3>Хүртээмж</h3><p>Хүртээмжийн аяны хүрээнд (6/5–7/5) брайль тэмдэглэгээг нэмэгдүүлж, байгууллага бүрт хөгжлийн бэрхшээлтэй иргэдийн зогсоол гаргасан.</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="уурхай">
+      <header><span class="tag">Уул уурхай</span><h2>Уул уурхай, нөхөн сэргээлт</h2></header>
+      <div class="body">
+        <p>Сумын нутаг дахь Туул голын дэнжид «Платинум Ланд», «Мөнх нархан орд» зэрэг компани үйл ажиллагаа явуулдаг. Уул уурхайн компаниуд сумын малын сэг зэм цэвэрлэх, эмнэлэг тохижуулах зэрэг ажилд дэмжлэг үзүүлдэг.</p>
+        <ul class="list">
+          <li><span class="meta">Платинум Ланд ХХК</span><h3>Туулын зүүн дэнжийн нөхөн сэргээлт</h3><p>53 га-д техникийн, 33 га-д биологийн нөхөн сэргээлт хийж, 40,000 ширхэг чацаргана тарьсан. Компани 2030 он хүртэл нэг сая мод тарих зорилттой. Ерөнхийлөгч У.Хүрэлсүх «Тэрбум мод» үндэсний хөдөлгөөний хүрээнд энэ ажилтай Бүрэгхангай суманд танилцсан.</p></li>
+          <li><span class="meta">Байгаль хамгаалал</span><h3>Орон нутгийн тусгай хамгаалалт</h3><p>Бүрэгхангай нь аймгийн нутгийн 23% буюу 1.12 сая га талбайг орон нутгийн хамгаалалтад авсан таван сумын нэг.</p></li>
+          <li><span class="meta">2026 он</span><h3>Ус, хог хаягдал</h3><p>Байгаль хамгаалах сангийн 2.1 сая ₮-өөр сумын төв болон Шавартын худгуудыг засварласан. Сумын төвийн хогийн цэгийг цэвэрлэж, Цахт, Дэрст багт малын сэг зэмийг устгасан.</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="газар">
+      <header><span class="tag">Газар нутаг</span><h2>Газрын ашиглалт</h2></header>
+      <div class="body">
+        <p>Нийт 349,792 га газрын дийлэнх нь бэлчээр бөгөөд энэ нь мал аж ахуй сумын эдийн засгийн тулгуур болохыг харуулна.</p>
+        <div class="bar" role="img" aria-label="Газрын ашиглалт: бэлчээр 80.7%, хадлан 3.0%, тариалан 1.2%, бусад 15.1%">
+          <span style="width:80.65%;background:var(--pine)"></span>
+          <span style="width:3.02%;background:var(--hay)"></span>
+          <span style="width:1.25%;background:var(--ochre)"></span>
+          <span style="width:15.08%;background:var(--rest)"></span>
+        </div>
+        <ul class="legend">
+          <li><span class="sw" style="background:var(--pine)"></span><span>Бэлчээр</span><span class="num">282,109 га</span><span class="pct">80.7%</span></li>
+          <li><span class="sw" style="background:var(--hay)"></span><span>Хадлан</span><span class="num">10,564 га</span><span class="pct">3.0%</span></li>
+          <li><span class="sw" style="background:var(--ochre)"></span><span>Тариалан</span><span class="num">4,361 га</span><span class="pct">1.2%</span></li>
+          <li><span class="sw" style="background:var(--rest)"></span><span>Бусад (ой, ус, суурин г.м.)</span><span class="num">52,758 га</span><span class="pct">15.1%</span></li>
+        </ul>
+        <p class="note">«Бусад» нь нийт талбайгаас бэлчээр, хадлан, тариаланг хассан үлдэгдэл.</p>
+      </div>
+    </section>
+
+    <section id="тариалан">
+      <header><span class="tag">Газар тариалан</span><h2>2015 оны тариалалт, ургац</h2></header>
+      <div class="body">
+        <p>Булган аймгийн өмнөд, төв хэсэг нь Монголын цөөн тариалангийн бүсийн нэг. 2015 онд тус суманд 9 аж ахуйн нэгж, 33 өрх тариалалт эрхэлжээ.</p>
+        <p class="sub">Тариалсан талбай, га</p>
+        <ul class="hbars">
+          <li><span>Буудай</span><span class="track"><span class="fill" style="display:block;width:100%"></span></span><span class="num">1,390</span></li>
+          <li><span>Техникийн ургамал</span><span class="track"><span class="fill o" style="display:block;width:58.3%"></span></span><span class="num">810</span></li>
+          <li><span>Овьёос</span><span class="track"><span class="fill" style="display:block;width:6.5%"></span></span><span class="num">90</span></li>
+          <li><span>Төмс</span><span class="track"><span class="fill o" style="display:block;width:1%"></span></span><span class="num">14</span></li>
+          <li><span>Хүнсний ногоо</span><span class="track"><span class="fill o" style="display:block;width:0.6%"></span></span><span class="num">8.4</span></li>
+        </ul>
+        <p class="sub">Хүнсний ногооны ургац, тонн</p>
+        <div class="tbl">
+          <table>
+            <tbody>
+              <tr><td>Байцаа</td><td class="n">20.4</td></tr>
+              <tr><td>Шар манжин</td><td class="n">16.0</td></tr>
+              <tr><td>Лууван</td><td class="n">13.0</td></tr>
+              <tr><td>Сонгино</td><td class="n">12.0</td></tr>
+              <tr><th>Нийт</th><td class="n"><b>65.4</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Эх үүсвэр: Булган аймгийн нийгэм, эдийн засгийн танилцуулга, 2015 оны 9-р сар.</p>
+      </div>
+    </section>
+
+    <section id="мал">
+      <header><span class="tag">Мал аж ахуй</span><h2>2015 оны төллөлт</h2></header>
+      <div class="body">
+        <p>Мал аж ахуй бол сумын эдийн засгийн гол салбар. Хангайн өвс сайтай бэлчээр, голын хөндийнүүд нь малчдад тааламжтай нөхцөл бүрдүүлдэг.</p>
+        <div class="tbl">
+          <table>
+            <thead><tr><th>Мал</th><th class="n">Төллөсөн</th><th class="n">Төллөлт</th><th class="n">Бойжсон</th></tr></thead>
+            <tbody>
+              <tr><td>Хонь</td><td class="n">67,050</td><td class="n">91.5%</td><td class="n">64,841</td></tr>
+              <tr><td>Ямаа</td><td class="n">35,090</td><td class="n">84.6%</td><td class="n">31,480</td></tr>
+              <tr><td>Үхэр</td><td class="n">6,685</td><td class="n">79.9%</td><td class="n">6,614</td></tr>
+              <tr><td>Адуу</td><td class="n">4,191</td><td class="n">79.6%</td><td class="n">4,113</td></tr>
+              <tr><td>Тэмээ</td><td class="n">38</td><td class="n">52.1%</td><td class="n">36</td></tr>
+              <tr><th>Нийт</th><td class="n"><b>113,054</b></td><td class="n"><b>88.0%</b></td><td class="n"><b>107,084</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">2015 оны эхний 9 сарын байдлаар. Эх үүсвэр: Булган аймгийн Статистикийн хэлтэс.</p>
+      </div>
+    </section>
+
+    <section id="байгаль">
+      <header><span class="tag">Байгаль</span><h2>Ус, ургамал, амьтан</h2></header>
+      <div class="body">
+        <p>Сумын нутгаар Шивэрт, Бичигт зэрэг 30 орчим гол горхи урсдаг бөгөөд рашаан булагтай. 20 гаруй төрлийн эмийн ургамал ургадаг, 20 гаруй зүйлийн ан амьтан, мэрэгч амьдардаг.</p>
+        <p class="sub">Ан амьтан</p>
+        <ul class="chips">
+          <li>Буга</li><li>Бор гөрөөс</li><li>Зэрлэг гахай</li><li>Чоно</li><li>Шилүүс</li><li>Үнэг</li><li>Дорго</li><li>Туулай</li><li>Тарвага</li>
+        </ul>
+        <p class="sub">Нүүдлийн шувуу</p>
+        <ul class="chips out">
+          <li>Хун</li><li>Галуу</li><li>Тогоруу</li><li>Нугас</li><li>Ангир</li><li>Хөхөө</li><li>Өвөөлж</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="хүн-ам">
+      <header><span class="tag">Хүн ам</span><h2>Хүн амын тоо</h2></header>
+      <div class="body">
+        <div class="tbl">
+          <table>
+            <thead><tr><th>Он</th><th class="n">Хүн ам</th><th style="width:45%"></th></tr></thead>
+            <tbody>
+              <tr><td>2005</td><td class="n">2,123</td><td><div class="popbar" style="width:88%"></div></td></tr>
+              <tr><td>2008</td><td class="n">2,366</td><td><div class="popbar" style="width:98%"></div></td></tr>
+              <tr><td>2009</td><td class="n">2,406</td><td><div class="popbar" style="width:100%"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Эх үүсвэр: Булган аймгийн Статистикийн хэлтсийн жилийн тайлан. Сүүлийн жилүүдийн тоог Үндэсний статистикийн хорооны 1212.mn сайтаас шалгана уу.</p>
+      </div>
+    </section>
+
+    <section id="алдартнууд">
+      <header><span class="tag">Алдартнууд</span><h2>Нутгийн нэрт хүмүүс</h2></header>
+      <div class="body">
+        <ul class="list">
+          <li><span class="meta">Түүхэн баатар</span><h3>Дандар баатар</h3><p>Тус сумын уугуул. Түүний хөшөө сумын төвд сүндэрлэдэг.</p></li>
+          <li><span class="meta">1923 он</span><h3>Жамъяндорж</h3><p>Шажин-Бүрэг уулын хошууны анхны дарга.</p></li>
+          <li><span class="meta">Бөх</span><h3>Дашзэвэгийн Баасандорж</h3><p>Монгол Улсын заан. 2026 онд Хөдөлмөрийн гавьяаны улаан тугийн одонгоор шагнагдсан.</p></li>
+          <li><span class="meta">Бөх</span><h3>Д.Тамир</h3><p>Монгол Улсын начин, Бүрэгхангай сумын харьяат.</p></li>
+          <li><span class="meta">2024 он</span><h3>Даржаагийн Цэрэннадмид</h3><p>Ардын хатанбаатар С.Магсаржавын нэрэмжит шагнал хүртсэн.</p></li>
+          <li><span class="meta">Урлаг</span><h3>Доржсүрэнгийн Батсүх, Ж.Цэрэндолгор</h3><p>Сумын уугуул дуучид. Батсүх нь Цэргийн дуу бүжгийн эрдмийн чуулгын дуучин, Цэрэндолгор нь уртын дуучин.</p></li>
+          <li><span class="meta">Малчин</span><h3>Сэрээнэнхорол</h3><p>Монгол хонийг баяд үүлдэртэй эрлийзжүүлэн үржүүлсэн ахмад малчин.</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="дурсгал">
+      <header><span class="tag">Дурсгалт газар</span><h2>Түүх, байгалийн дурсгал</h2></header>
+      <div class="body">
+        <ul class="list">
+          <li><span class="meta">Хадны бичээс</span><h3>Бичигтийн хадан хошуу</h3><p>Эртний хадны бичээстэй. XIII зууны монгол бичигтэй төстэй гэж таамагладаг бөгөөд Монголын томоохон хадны зургийн дурсгалд тооцогддог.</p></li>
+          <li><span class="meta">Хадны зураг</span><h3>Ногоон морьт</h3><p>Хадан дээр зурсан таван морины дүрс. «Ланд арт» маягийн дурсгал гэж тодорхойлдог.</p></li>
+          <li><span class="meta">Хүннү</span><h3>Шувуутын голын хэрэм</h3><p>Эрдэмтдийн судалж тогтоосон Хүннүгийн үеийн хот балгасын нэг.</p></li>
+          <li><span class="meta">Хүннү</span><h3>Өвгөнт</h3><p>Хүннүгийн жирийн иргэдийн булш бүхий газар.</p></li>
+          <li><span class="meta">Хүннү</span><h3>Их Дулаан</h3><p>Хүннүгийн түшмэдүүдийн бичгийн хэрэгслийн олдвор гарсан газар.</p></li>
+          <li><span class="meta">Байгалийн дурсгал</span><h3>Хавиргагүй хайлааст уул</h3><p>Хайлаас модоор бүрхэгдсэн уул.</p></li>
+          <li><span class="meta">Байгалийн дурсгал</span><h3>Бодь мод</h3><p>Бодь гөрөөс шиг хэлбэртэй модоор алдартай.</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="соёл">
+      <header><span class="tag">Соёл, спорт</span><h2>Сүлд дуу, наадам</h2></header>
+      <div class="body">
+        <p class="sub">«Сазан Бүрэгийн сайхан нутаг» сүлд дуу</p>
+        <dl class="kv">
+          <dt>Ая</dt><dd>МУУГЗ Д.Цэвээнравдан</dd>
+          <dt>Үг</dt><dd>МУСТА Б.Мөнхбаатар</dd>
+          <dt>Дуулсан</dt><dd>Х.Батболд, Д.Батсүх, Ж.Цэрэндолгор</dd>
+          <dt>Санхүүжилт</dt><dd>11 сая ₮. Нутгийн иргэдийн хандив 6 сая ₮, 1993 оны XV төгсөлтийн хамт олон 5 сая ₮</dd>
+        </dl>
+        <p class="sub">Спорт, наадам</p>
+        <p>2026 оны 7-р сард сум байгуулагдсаны 103 жилийн ойн наадам болсон. Бөхийн барилдаанд сумын бөх Г.Содбаясгалан түрүүлж, сур харвааны насанд хүрсэн эрэгтэйчүүдийн төрөлд Э.Энхтүвшин тэргүүлсэн. Их, бага насны морины уралдаанд нутгийн малчдын морь түрүүлсэн.</p>
+        <div class="tbl">
+          <table>
+            <thead><tr><th>Төрөл (103 жилийн ойн наадам)</th><th>Түрүүлсэн</th></tr></thead>
+            <tbody>
+              <tr><td>Бөх, насанд хүрэгчид</td><td>Г.Содбаясгалан</td></tr>
+              <tr><td>Бөх, 14–16 нас</td><td>М.Үүрцайх</td></tr>
+              <tr><td>Бөх, 10–13 нас</td><td>Б.Итгэл</td></tr>
+              <tr><td>Сур харваа, эрэгтэй</td><td>Сумын мэргэн Э.Энхтүвшин</td></tr>
+              <tr><td>Сур харваа, эмэгтэй</td><td>Улсын мэргэн Б.Баярцэцэг</td></tr>
+              <tr><td>Сур харваа, хөвгүүд</td><td>М.Хангэрэл</td></tr>
+              <tr><td>Сур харваа, охид</td><td>М.Мөнхнаран</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:1rem">«Малчид, төлчдийн баяр – 2026»-ын хүрээнд 32 бөхийн барилдаан болж, «Бүрэгхангай хурд-2026» морин уралдаанд 205 морь уралдсан.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <h2>Эх сурвалж</h2>
+    <ol>
+      <li><a href="https://buregkhangai.bu.gov.mn/web/108.htm" target="_blank" rel="noopener">Бүрэгхангай сумын ЗДТГ — Түүхэн замнал</a></li>
+      <li><a href="https://buregkhangai.bu.gov.mn/web/111.htm" target="_blank" rel="noopener">Бүрэгхангай сумын ЗДТГ — Алдартнууд</a></li>
+      <li><a href="https://buregkhangai.bu.gov.mn/web/112.htm" target="_blank" rel="noopener">Бүрэгхангай сумын ЗДТГ — Түүхэн дурсгалт газрууд</a></li>
+      <li><a href="https://buregkhangai.bu.gov.mn/web/show/240400002" target="_blank" rel="noopener">Бүрэгхангай сумын ЗДТГ — «Сазан Бүрэгийн сайхан нутаг»</a></li>
+      <li><a href="https://buregkhangai.bu.gov.mn/web/116.htm" target="_blank" rel="noopener">Бүрэгхангай сумын ЗДТГ — Соёл урлаг, спорт</a></li>
+      <li><a href="https://buregkhangai.bu.gov.mn/web/115.htm" target="_blank" rel="noopener">Бүрэгхангай сумын ЗДТГ — Бүтээн байгуулалт</a></li>
+      <li><a href="https://buregkhangai.bu.gov.mn/web/113.htm" target="_blank" rel="noopener">Бүрэгхангай сумын ЗДТГ — Цаг үеийн мэдээ</a></li>
+      <li><a href="https://buregkhangai.bu.gov.mn/web/119.htm" target="_blank" rel="noopener">Бүрэгхангай сумын ЗДТГ — Хүнс, хөдөө аж ахуй</a></li>
+      <li><a href="https://buregkhangai.bu.gov.mn/web/114.htm" target="_blank" rel="noopener">Бүрэгхангай сумын ЗДТГ — Эрүүл мэнд, боловсрол</a></li>
+      <li><a href="https://buregkhangai.bu.gov.mn/web/118.htm" target="_blank" rel="noopener">Бүрэгхангай сумын ЗДТГ — Хөдөлмөр, нийгмийн хамгаалал</a></li>
+      <li><a href="https://buregkhangai.bu.gov.mn/web/120.htm" target="_blank" rel="noopener">Бүрэгхангай сумын ЗДТГ — Байгаль орчин, газрын харилцаа</a></li>
+      <li><a href="https://buregkhangai.bu.gov.mn/web/196.htm" target="_blank" rel="noopener">Бүрэгхангай сумын ЗДТГ — Хүүхэд хамгаалал</a></li>
+      <li><a href="https://buregkhangai.bu.gov.mn/web/show/260700015" target="_blank" rel="noopener">Бүрэгхангай сумын ЗДТГ — Наадмын сур харвааны дүн 2026</a></li>
+      <li><a href="https://buregkhangai.bu.gov.mn/web/show/260700011" target="_blank" rel="noopener">Бүрэгхангай сумын ЗДТГ — Өсвөрийн бөхийн барилдаан 2026</a></li>
+      <li><a href="https://president.mn/26708/" target="_blank" rel="noopener">«Платинум Ланд» ХХК 2030 он хүртэл нэг сая мод тарина — Ерөнхийлөгчийн Тамгын газар</a></li>
+      <li><a href="https://www.nature.bu.gov.mn/show/241200010" target="_blank" rel="noopener">Булган аймгийн Байгаль орчны газар — стратеги төлөвлөгөө</a></li>
+      <li><a href="https://news.mn/r/2663005/" target="_blank" rel="noopener">Аймаг, сумдын 100 жилийн ойн үзүүр, түрүү бөхчүүд — news.mn</a></li>
+      <li><a href="https://uvs.nso.mn/uploads/users/8/files/bull201509.pdf" target="_blank" rel="noopener">Булган аймгийн нийгэм, эдийн засгийн танилцуулга, 2015/09</a></li>
+      <li><a href="https://mn.wikipedia.org/wiki/%D0%91%D2%AF%D1%80%D1%8D%D0%B3%D1%85%D0%B0%D0%BD%D0%B3%D0%B0%D0%B9_%D1%81%D1%83%D0%BC" target="_blank" rel="noopener">Бүрэгхангай сум — Википедиа</a></li>
+      <li><a href="https://wikiwand.com/en/articles/Bulgan_Province" target="_blank" rel="noopener">Bulgan Province — Wikiwand</a></li>
+      <li><a href="https://www.shuud.mn/a/480061" target="_blank" rel="noopener">Мал тарган, малчин түмэн өнтэй өвөлжиж байна — shuud.mn</a></li>
+      <li><a href="https://sos-archaeology.ucoz.com/news/arkheologi_b_rehn_lekc_4/2012-04-02-57" target="_blank" rel="noopener">Археологийн лекц 4</a></li>
+      <li><a href="https://mongolianguideschool.com/info11/detail/28" target="_blank" rel="noopener">Эртний түүх — Хүннү</a></li>
+    </ol>
+    <div class="contact">Сумын ЗДТГ: info@buregkhangai.bu.gov.mn · +976 7034-0000</div>
+  </footer>
+</div>
+
+</body>
+</html>
